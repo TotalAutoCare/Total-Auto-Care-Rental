@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Transaction, TransactionType, FinancialSummary, RecurrenceType, Currency, CurrencyMeta } from './types';
 import { getFinancialAdvice } from './services/geminiService';
@@ -18,6 +19,8 @@ const App: React.FC = () => {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isCurrencyMenuOpen, setIsCurrencyMenuOpen] = useState(false);
   const currencyMenuRef = useRef<HTMLDivElement>(null);
+  
+  const hasApiKey = !!process.env.API_KEY;
 
   useEffect(() => {
     if (darkMode) {
@@ -110,7 +113,6 @@ const App: React.FC = () => {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       <header className="flex-shrink-0 z-50 glass border-b border-slate-200 dark:border-slate-800 transition-all">
-        {/* Added Safe Area Padding Top */}
         <div style={{ paddingTop: 'var(--sat, 0px)' }}>
           <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-1.5 p-0.5 rounded-xl bg-slate-200/50 dark:bg-slate-800/50 pr-4">
@@ -123,6 +125,9 @@ const App: React.FC = () => {
             </div>
             
             <div className="flex items-center gap-2">
+              {!hasApiKey && (
+                <span className="text-[8px] bg-rose-500 text-white px-2 py-1 rounded-full font-black animate-pulse">API KEY MISSING</span>
+              )}
               <div className="relative" ref={currencyMenuRef}>
                 <button 
                   onClick={() => setIsCurrencyMenuOpen(!isCurrencyMenuOpen)}
@@ -201,7 +206,6 @@ const App: React.FC = () => {
             />
           </div>
         </div>
-        {/* Added Safe Area Padding Bottom */}
         <div style={{ height: 'var(--sab, 0px)' }}></div>
       </main>
     </div>

@@ -2,9 +2,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TransactionType } from "../types";
 
+// Helper to get key from environment or global config
+const getApiKey = () => {
+  // Try to find the key in the environment
+  return process.env.API_KEY || (window as any).VITE_API_KEY || "";
+};
+
 export async function parseTransaction(text: string) {
-  // Always initialize inside the function to ensure the latest process.env.API_KEY is used
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    console.error("Gemini API Key is missing. Please set API_KEY in Vercel environment variables.");
+    return null;
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
 
   try {
     const response = await ai.models.generateContent({
@@ -35,7 +46,10 @@ export async function parseTransaction(text: string) {
 }
 
 export async function getFinancialAdvice(transactions: any[]) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) return "API Key not configured in Vercel.";
+
+  const ai = new GoogleGenAI({ apiKey });
 
   try {
     const response = await ai.models.generateContent({

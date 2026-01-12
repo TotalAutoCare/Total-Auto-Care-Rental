@@ -1,0 +1,17 @@
+{
+  "name": "TAC Rental",
+  "short_name": "TAC Rental",
+  "description": "High-end personal finance architectural tool.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}

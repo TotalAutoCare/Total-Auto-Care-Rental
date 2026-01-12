@@ -2,19 +2,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TransactionType } from "../types";
 
-// Helper to initialize AI with safety check for Netlify environment
-const getAIClient = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    console.warn("Personal Finance Architect: API_KEY is missing in environment variables.");
-    return null;
-  }
-  return new GoogleGenAI({ apiKey });
-};
-
 export async function parseTransaction(text: string) {
-  const ai = getAIClient();
-  if (!ai) return null;
+  // Always initialize inside the function to ensure the latest process.env.API_KEY is used
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   try {
     const response = await ai.models.generateContent({
@@ -45,19 +35,19 @@ export async function parseTransaction(text: string) {
 }
 
 export async function getFinancialAdvice(transactions: any[]) {
-  const ai = getAIClient();
-  if (!ai) return "Architect is offline. Please set API_KEY in Netlify dashboard.";
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Analyze these transactions and provide architectural financial advice: ${JSON.stringify(transactions.slice(-10))}`,
       config: {
-        systemInstruction: "You are the Personal Finance Architect. Be concise, professional, and strategic."
+        systemInstruction: "You are the Personal Finance Architect. Be concise, professional, and strategic. Focus on wealth optimization and asset allocation."
       }
     });
     return response.text;
   } catch (e) {
-    return "Wealth building is a journey. Keep tracking your progress.";
+    console.error("Advice Generation Error:", e);
+    return "The market is quiet. Continue your strategic transaction tracking.";
   }
 }

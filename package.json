@@ -1,9 +1,8 @@
-
 {
   "name": "tac-rental-finance",
   "version": "1.0.0",
   "private": true,
-  "description": "Personal Finance Architect - Netlify Ready",
+  "description": "Personal Finance Architect - Vercel Ready",
   "type": "module",
   "dependencies": {
     "react": "^19.2.3",
@@ -13,6 +12,7 @@
   },
   "scripts": {
     "start": "npx serve .",
-    "build": "echo 'Optimizing for deployment...'"
+    "build": "mkdir -p dist && cp -rv ./*.html ./*.tsx ./*.ts ./*.json ./*.png ./components ./services dist/ || true",
+    "dev": "npx serve ."
   }
 }
